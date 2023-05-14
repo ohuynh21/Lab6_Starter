@@ -43,10 +43,15 @@ function addRecipesToDocument(recipes) {
   //            each <recipe-card> with that recipe data using element.data = ...
   //            Append each element to <main>
   console.log(recipes);
-  for (let i = 0; i < recipes.length; i++) {
-    const recipeCard = document.createElement('recipe-card');
-    recipeCard.data = recipes[i];
-    main.appendChild(recipeCard);
+  if (recipes == null){
+    return;
+  }
+  else{
+    for (let i = 0; i < recipes.length; i++) {
+      const recipeCard = document.createElement('recipe-card');
+      recipeCard.data = recipes[i];
+      main.appendChild(recipeCard);
+    }
   }
 }
 
@@ -82,6 +87,7 @@ function initFormHandler() {
     //            make this easier to read), and then extract the keys and corresponding
     //            values from the FormData object and insert them into recipeObject
     const recipeObject = {};
+    // populate the object
     for (let [key, value] of formData) {
       recipeObject[key] = value;
     }
@@ -96,8 +102,14 @@ function initFormHandler() {
     // B9. TODO - Get the recipes array from localStorage, add this new recipe to it, and
     //            then save the recipes array back to localStorage
     const recipes = getRecipesFromStorage();
-    recipes.push(recipeObject);
-    saveRecipesToStorage(recipes);
+    // if there are no recipes, let the form entry be the first
+    if (recipes == null){
+      localStorage.setItem('recipes', JSON.stringify(recipeObject));
+    }
+    else{
+      recipes.push(recipeObject);
+      saveRecipesToStorage(recipes);
+    }
   });
   // B10. TODO - Get a reference to the "Clear Local Storage" button
   const clear = document.getElementsByClassName("danger")[0];
